@@ -17,18 +17,20 @@ namespace AuthApp.ViewModels
         private string _error;
         private AccountManager _accountManager;
 
-        public Action<User> Authenticated;
-        public Action DeniedAuthenitacionAction;
-
-        public Action<User> Registrated;
-        
+        public Action<dtoPerson> Authenticated;
+        public Action AuthenticationDenied;
+        public Action<dtoPerson> Registrated;
+        public Action RegistrationDenied;
 
         public AuthenticationViewModel(AccountsRepository repo)
         {
             _accountsRepo = repo;
             _accountManager = new AccountManager();
-            _accountManager.AccessSucceed += Authenticate;
-            _accountManager.AccessDenied += DenieAccess;
+
+            _accountManager.AccessSucceed += resp => Authenticated?.Invoke(resp.User);
+            _accountManager.AccessDenied += resp => AuthenticationDenied?.Invoke();
+            _accountManager.RegistrationDenied += resp => RegistrationDenied?.Invoke();
+            _accountManager.RegistrationSucceed += resp => Registrated?.Invoke(resp.User);
         }
 
         public string Error { get => _error; set => SetValue(ref _error, value); }
@@ -47,7 +49,7 @@ namespace AuthApp.ViewModels
                                 _login.Where(el => char.IsDigit(el)).Any() ||
                                 _login.Contains(" "))
                                 _error = "Логин не правильного формата";
-                            else 
+                            else
                                 _error = string.Empty;
 
                             break;
@@ -89,11 +91,5 @@ namespace AuthApp.ViewModels
                 });
             }
         }
-
-        private void Authenticate(AccountResponse response) =>
-            Authenticated?.Invoke(response.User);
-
-        private void DenieAccess(AccountResponse response) =>
-            DeniedAuthenitacionAction?.Invoke();
     }
 }

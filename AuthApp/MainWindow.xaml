@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:AuthApp"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterScreen">
     <Grid>
         
     </Grid>

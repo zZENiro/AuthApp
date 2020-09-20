@@ -5,14 +5,15 @@ namespace AuthApp
     public class AccountResponse
     {
         private bool _authenticated;
-        private User _user;
+        private dtoPerson _user;
 
         public AccountResponse(bool authenticated)
         {
             _authenticated = authenticated;
         }
 
+        public string Message { get; set; }
         public bool Authenticated { get => _authenticated; set => _authenticated = value; }
-        public User User { get => _user; set => _user = value; }
+        public dtoPerson User { get => _user; set => _user = value; }
     }
 }

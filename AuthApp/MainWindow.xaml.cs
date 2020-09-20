@@ -21,7 +21,7 @@ namespace AuthApp
     {
         DesignersShopDbContext _context;
         AuthenticationWindow _authWindow;
-        Role _role;
+        dtoRole _role;
 
         public MainWindow()
         {
@@ -38,7 +38,7 @@ namespace AuthApp
             {
                 InitializeComponent();
                 this.Visibility = Visibility.Visible;
-                _role = ((User)user).Role;
+                _role = ((dtoPerson)user).role;
             };
         }
     }

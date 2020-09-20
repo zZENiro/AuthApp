@@ -13,7 +13,7 @@ namespace AuthApp
 {
     public partial class AuthenticationWindow : Window
     {
-        public Action<User> Authenticated;
+        public Action<dtoPerson> Authenticated;
 
         private AuthenticationViewModel _authVM;
 
@@ -26,17 +26,18 @@ namespace AuthApp
 
             _authVM = new AuthenticationViewModel(accounts);
             _authVM.Authenticated += user => Authenticated(user);
-            _authVM.DeniedAuthenitacionAction += () => MessageBox.Show("Неправильный логин/пароль");
+            _authVM.AuthenticationDenied += () => MessageBox.Show("Неправильный логин/пароль.");
             _authVM.Registrated += user => AlertRegistration(user);
+            _authVM.RegistrationDenied += () => MessageBox.Show("Не удалось зарегестрироваться.");
 
             DataContext = _authVM;
         }
 
-        private void AlertRegistration(User user)
+        private void AlertRegistration(dtoPerson user)
         {
             MessageBox.Show($"Вы зарегестрированы.\n" +
-                            $"логин: {user.Login}\n" +
-                            $"пароль: {user.Password}");
+                            $"логин: {user.login}\n" +
+                            $"пароль: {user.password}");
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)

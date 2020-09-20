@@ -15,6 +15,9 @@ namespace AuthApp
         public Action<AccountResponse> AccessSucceed;
         public Action<AccountResponse> AccessDenied;
 
+        public Action<AccountResponse> RegistrationSucceed;
+        public Action<AccountResponse> RegistrationDenied;
+
         public async Task AuthenticateAsync(string login, string password)
         {
             var client = new RestClient(new Uri("https://localhost:5001/api/Accounts/Authenticate"));
@@ -27,27 +30,35 @@ namespace AuthApp
 
             var resp = await client.ExecuteAsync(request);
 
-            if (resp.StatusCode == HttpStatusCode.OK)
-                AccessSucceed?.Invoke(new AccountResponse(authenticated: true)
-                {
-                    User = JsonSerializer.Deserialize<User>(resp.Content)
-                });
+            if (resp.StatusCode == HttpStatusCode.OK || resp.StatusCode == HttpStatusCode.Accepted)
+            {
+                var user = JsonSerializer.Deserialize<dtoPerson>(resp.Content);
+                AccessSucceed?.Invoke(new AccountResponse(authenticated: true) { User = user });
+            }
             else
                 AccessDenied?.Invoke(new AccountResponse(authenticated: false));
         }
 
         public async Task RegistrateAsync(string login, string password)
         {
-            var client = new RestClient(new Uri("https://localhost:5001/api/Accounts/Registrate"));
-            var request = new RestRequest(Method.POST);
-            client.CookieContainer.Add(new Cookie("login", login, "/", "localhost"));
-            client.CookieContainer.Add(new Cookie("password", password, "/", "localhost"));
+            var client = new RestClient(new Uri("https://localhost:5001/api/Accounts/Registration"));
+            var request = new RestRequest(Method.GET);
+
+            var cookies = new CookieContainer();
+            cookies.Add(new Cookie("login", login, "/", "localhost"));
+            cookies.Add(new Cookie("password", password, "/", "localhost"));
+            cookies.Add(new Cookie("username", "undefinded", "/", "localhost"));
+            client.CookieContainer = cookies;
+
             var resp = await client.ExecuteAsync(request);
 
-            if (resp.StatusCode == HttpStatusCode.OK)
-                AccessSucceed?.Invoke(new AccountResponse(authenticated: true) { User = JsonSerializer.Deserialize<User>(resp.Content) });
-
-            AccessDenied?.Invoke(new AccountResponse(authenticated: false));
+            if (resp.StatusCode == HttpStatusCode.Accepted || resp.StatusCode == HttpStatusCode.OK)
+                RegistrationSucceed?.Invoke(new AccountResponse(authenticated: true)
+                {
+                    User = JsonSerializer.Deserialize<dtoPerson>(resp.Content)
+                });
+            else
+                RegistrationDenied?.Invoke(new AccountResponse(authenticated: false));
         }
     }
 }
