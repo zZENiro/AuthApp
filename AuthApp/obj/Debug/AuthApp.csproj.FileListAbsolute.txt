@@ -67,3 +67,6 @@ C:\Users\zZEN\source\repos\AuthApp\AuthApp\bin\Debug\RestSharp.dll
 C:\Users\zZEN\source\repos\AuthApp\AuthApp\bin\Debug\System.Text.Encodings.Web.dll
 C:\Users\zZEN\source\repos\AuthApp\AuthApp\bin\Debug\System.Text.Json.dll
 C:\Users\zZEN\source\repos\AuthApp\AuthApp\bin\Debug\System.ValueTuple.dll
+C:\Users\zZEN\source\repos\AuthApp\AuthApp\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\zZEN\source\repos\AuthApp\AuthApp\obj\Debug\Views\AdminRole.baml
+C:\Users\zZEN\source\repos\AuthApp\AuthApp\obj\Debug\Views\UserRole.baml

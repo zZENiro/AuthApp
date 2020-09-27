@@ -1,5 +1,6 @@
 ﻿using AuthApp.DataContext;
 using AuthApp.Repositories;
+using AuthApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,9 +26,9 @@ namespace AuthApp
 
         public MainWindow()
         {
-            this.Visibility = Visibility.Hidden;
-            this.IsVisibleChanged += (s, e) => _authWindow.Visibility = Visibility.Collapsed;
-            this.Closed += (s, e) => Application.Current.Shutdown();
+            Visibility = Visibility.Hidden;
+            IsVisibleChanged += (s, e) => _authWindow.Visibility = Visibility.Collapsed;
+            Closed += (s, e) => Application.Current.Shutdown();
 
             _context = new DesignersShopDbContext();
 
@@ -38,7 +39,18 @@ namespace AuthApp
             {
                 InitializeComponent();
                 this.Visibility = Visibility.Visible;
-                _role = ((dtoPerson)user).role;
+
+                switch (((dtoPerson)user).role.roleName)
+                {
+                    case "Admin":
+                        ((MainViewModel)DataContext).SelectedRole = new AdminViewModel();
+                        break;
+                    case "User":
+                        ((MainViewModel)DataContext).SelectedRole = new UserViewModel();
+                        break;
+                    default:
+                        break;
+                }
             };
         }
     }

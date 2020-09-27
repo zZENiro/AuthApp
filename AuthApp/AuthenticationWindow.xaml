@@ -49,15 +49,15 @@
         </Grid.RowDefinitions>
     
         <!--logo-->
-        <Image Source="C:\Users\zZEN\source\repos\AuthApp\AuthApp\Resources\logo-02.jpg" Grid.ColumnSpan="2" Stretch="None"/>
+        <Image Source="/Resources/logo01.jpg" Grid.ColumnSpan="2" Stretch="None"/>
         
         <!--creds-->
         
         <!--login-->
         <Label Grid.Column="0" Grid.Row="1">Логин: </Label>
-        <TextBox Grid.Column="1" Grid.Row="1" Style="{StaticResource login}" TextChanged="TextBox_TextChanged" >
+        <TextBox Grid.Column="1" Grid.Row="1" Style="{StaticResource login}">
             <TextBox.Text>
-                <Binding Path="Login">
+                <Binding Path="Login" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
                         <DataErrorValidationRule />
                     </Binding.ValidationRules>

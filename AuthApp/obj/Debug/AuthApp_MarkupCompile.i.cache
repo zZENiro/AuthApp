@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\zZEN\source\repos\AuthApp\AuthApp\App.xaml
-21554449267
+4-483993052
 
-28-505891393
+30-1436330016
 59147674625
-AuthenticationWindow.xaml;MainWindow.xaml;
+AuthenticationWindow.xaml;MainWindow.xaml;Views\AdminRole.xaml;Views\UserRole.xaml;
 
 True
 

@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using AuthApp.Repositories;
 using AuthApp.DataContext;
 using AuthApp.ViewModels;
+using System.Windows.Input;
 
 namespace AuthApp
 {
@@ -21,14 +22,35 @@ namespace AuthApp
         {
             InitializeComponent();
 
-            this.Closed += (s, e) =>
+            Closed += (s, e) =>
                 Application.Current.Shutdown();
 
             _authVM = new AuthenticationViewModel(accounts);
-            _authVM.Authenticated += user => Authenticated(user);
-            _authVM.AuthenticationDenied += () => MessageBox.Show("Неправильный логин/пароль.");
-            _authVM.Registrated += user => AlertRegistration(user);
-            _authVM.RegistrationDenied += () => MessageBox.Show("Не удалось зарегестрироваться.");
+            _authVM.Authenticating += () => Mouse.OverrideCursor = Cursors.Wait;
+
+            _authVM.Authenticated += user =>
+            {
+                Mouse.OverrideCursor = Cursors.Arrow;
+                Authenticated(user);
+            };
+
+            _authVM.AuthenticationDenied += () =>
+            {
+                Mouse.OverrideCursor = Cursors.Arrow;
+                MessageBox.Show("Неправильный логин/пароль.");
+            };
+
+            _authVM.Registrated += user =>
+            {
+                Mouse.OverrideCursor = Cursors.Arrow;
+                AlertRegistration(user);
+            };
+
+            _authVM.RegistrationDenied += () =>
+            {
+                Mouse.OverrideCursor = Cursors.Arrow;
+                MessageBox.Show("Не удалось зарегестрироваться.");
+            };
 
             DataContext = _authVM;
         }
@@ -38,11 +60,6 @@ namespace AuthApp
             MessageBox.Show($"Вы зарегестрированы.\n" +
                             $"логин: {user.login}\n" +
                             $"пароль: {user.password}");
-        }
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            _authVM.Login = ((TextBox)sender).Text;
         }
     }
 }

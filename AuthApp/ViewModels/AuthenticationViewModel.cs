@@ -16,11 +16,13 @@ namespace AuthApp.ViewModels
         private string _password;
         private string _error;
         private AccountManager _accountManager;
+        private bool _isProcessing;
 
         public Action<dtoPerson> Authenticated;
         public Action AuthenticationDenied;
         public Action<dtoPerson> Registrated;
         public Action RegistrationDenied;
+        public Action Authenticating;
 
         public AuthenticationViewModel(AccountsRepository repo)
         {
@@ -70,26 +72,37 @@ namespace AuthApp.ViewModels
             get => new AuthenticateCommand(
                 execute: async creds =>
                 {
-                    if (!string.IsNullOrEmpty(Error) || string.IsNullOrEmpty(_login))
+                    if (!string.IsNullOrEmpty(Error) || string.IsNullOrEmpty(Login))
                         MessageBox.Show("Некорректные входные данные");
                     else
+                    {
+                        Authenticating?.Invoke();
+                        _isProcessing = true;
                         await _accountManager.AuthenticateAsync(_login, _password);
-                }
+                        _isProcessing = false;
+                    }
+                },
+                canExecute: prop => !_isProcessing
             );
         }
 
         public ICommand RegisterCommand
         {
-            get
-            {
-                return new RegisterCommand(execute: async param =>
-                {
-                    if (!string.IsNullOrEmpty(Error) || string.IsNullOrEmpty(_login))
-                        MessageBox.Show("Некорректные входные данные");
-                    else
-                        await _accountManager.RegistrateAsync(_login, _password);
-                });
-            }
+            get => new RegisterCommand(
+                    execute: async param =>
+                    {
+                        if (!string.IsNullOrEmpty(Error) || string.IsNullOrEmpty(Login))
+                            MessageBox.Show("Некорректные входные данные");
+                        else
+                        {
+                            Authenticating?.Invoke();
+                            _isProcessing = true;
+                            await _accountManager.RegistrateAsync(_login, _password);
+                            _isProcessing = false;
+                        }
+                    },
+                    canExecute: prop => !_isProcessing
+                );
         }
     }
 }

@@ -4,10 +4,24 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AuthApp"
+        xmlns:vm="clr-namespace:AuthApp.ViewModels"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         WindowStartupLocation="CenterScreen">
-    <Grid>
-        
-    </Grid>
+    
+    <Window.DataContext>
+        <vm:MainViewModel />
+    </Window.DataContext>
+    
+    <Window.Resources>
+    <ResourceDictionary>
+            <local:ViewModelTemplateSelector x:Key="selector"/>
+    </ResourceDictionary>
+    </Window.Resources>
+    
+    <StackPanel>
+        <ContentControl Content="{Binding SelectedRole, UpdateSourceTrigger=PropertyChanged}" 
+                        ContentTemplateSelector="{StaticResource selector}"/>
+    </StackPanel>
+    
 </Window>
